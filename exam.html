@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>50+ Questions, 10 per page Quiz (No numbers)</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:20px; background:#f4f4f4; }
+  h1 { text-align: center; }
+  .question { display: none; background:#fff; padding:15px; margin-top:20px; border-radius:8px; }
+  .question.active { display: block; }
+  h3 { margin-top:0; }
+  label { display:block; margin:8px 0; }
+  #navBtn { padding:10px 20px; cursor:pointer; background:#3399ff; color:#fff; border:none; border-radius:5px; margin-top:20px; }
+  #navBtn:hover { background:#2878c9; }
+  #scoreDiv { display:none; background:#fff; padding:15px; margin-top:20px; border-radius:8px; }
+  .wrong { color:red; }
+  .correct { color:green; }
+</style>
+</head>
+<body>
+
+<h1>integrative programming mock exam</h1>
+<div id="quizContainer"></div>
+<div id="scoreDiv"></div>
+
+<script>
+// Example questions: only show question text, no numbers in display
+const questions = [
+  // OS Scripting & Command Basics
+  { q: "Which scripting language is used in Unix/Linux?", options: { a: "Bash", b: "PowerShell", c: "Python", d: "Perl" }, ans: "a" },
+  { q: "Which command in Bash deletes a file?", options: { a: "del", b: "Remove-Item", c: "rm", d: "delete" }, ans: "c" },
+  { q: "PowerShell command to copy a file?", options: { a: "copy-File", b: "Copy-Item", c: "cp", d: "copy" }, ans: "b" },
+  { q: "PowerShell command to delete a file?", options: { a: "del", b: "Remove-Item", c: "rm", d: "delete" }, ans: "b" },
+  { q: "Cross-platform scripting language?", options: { a: "Bash", b: "PowerShell", c: "Python", d: "Ruby" }, ans: "c" },
+  { q: "Bash command to list files?", options: { a: "ls", b: "dir", c: "list", d: "show" }, ans: "a" },
+  { q: "PowerShell listing command?", options: { a: "list", b: "Get-ChildItem", c: "dir", d: "ls" }, ans: "b" },
+  { q: "What is the primary benefit of OS scripting?", options: { a: "Enhanced security", b: "Automating tasks", c: "Data analysis", d: "Performance optimization" }, ans: "b" },
+  { q: "Which scripting language is object-oriented and integrated with .NET?", options: { a: "Bash", b: "PowerShell", c: "Python", d: "Ruby" }, ans: "b" },
+  { q: "PowerShell command to list directory contents?", options: { a: "ls", b: "list", c: "Get-ChildItem", d: "dir" }, ans: "c" },
+
+  // XML & Related Technologies
+  { q: "Part of XML used for transforming documents?", options: { a: "XSLT", b: "XPath", c: "XML Schema", d: "DOM" }, ans: "a" },
+  { q: "XPath is used for?", options: { a: "Transforming XML", b: "Validating XML", c: "Navigating XML", d: "Formatting XML" }, ans: "c" },
+  { q: "XML Schema (XSD) validates?", options: { a: "Appearance", b: "Structure & types", c: "Transformations", d: "Styles" }, ans: "b" },
+  { q: "XML Schema vs DTD? Enforces?", options: { a: "Readability", b: "Types & order", c: "Speed", d: "Transformations" }, ans: "b" },
+  { q: "Purpose of XSLT?", options: { a: "Validation", b: "Transform", c: "Navigate", d: "Style" }, ans: "b" },
+  { q: "The 'minOccurs' attribute refers to?", options: { a: "Maximum occurrences", b: "Minimum occurrences", c: "Data type", d: "Element order" }, ans: "b" },
+  { q: "XPath uses?", options: { a: "CSS", b: "Expressions", c: "JSONPath", d: "Functions" }, ans: "b" },
+  { q: "Top node in XML is called?", options: { a: "Root Element", b: "Parent", c: "Document", d: "Object" }, ans: "a" },
+  { q: "Load XML as?", options: { a: "Tree", b: "Stream", c: "String", d: "File" }, ans: "a" },
+  { q: "Ideal parser for big files?", options: { a: "DOM", b: "SAX", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "Main drawback of DOM?", options: { a: "Memory consumption", b: "Slow performance", c: "Complex syntax", d: "Limited file size" }, ans: "a" },
+  { q: "XML attribute is used for?", options: { a: "Child elements", b: "Meta data", c: "Content", d: "Styles" }, ans: "b" },
+  { q: "Validation tool for XML schema is?", options: { a: "DTD", b: "XSD", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "Most suitable parser for streaming large XML files?", options: { a: "DOM", b: "SAX", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "Which technology is used for validating XML element order?", options: { a: "DTD", b: "XSD", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "An XML document has a single root element?", options: { a: "True", b: "False" }, ans: "a" },
+  { q: "Can XPath be used to select nodes?", options: { a: "Yes", b: "No" }, ans: "a" },
+  { q: "Event-based XML parser is?", options: { a: "SAX", b: "DOM" }, ans: "a" },
+  { q: "In XPath, what does '//' mean?", options: { a: "Start from root", b: "Anywhere in the document", c: "Only children", d: "Parent nodes" }, ans: "b" },
+  { q: "XML Schema can specify?", options: { a: "Styling rules", b: "Structure and data types", c: "Transformation rules", d: "Rendering options" }, ans: "b" },
+  { q: "Which technology transforms XML to other formats?", options: { a: "XSLT", b: "XPath", c: "DOM", d: "XSD" }, ans: "a" },
+  { q: "The root element in a valid XML document must be?", options: { a: "Optional", b: "Unique", c: "Multiple", d: "None" }, ans: "b" },
+  { q: "XML Schema can specify element order?", options: { a: "Yes", b: "No" }, ans: "a" },
+  { q: "An XML document without a root element is?", options: { a: "Valid", b: "Invalid" }, ans: "b" },
+
+  // DOM vs. SAX & Parsing Methods
+  { q: "Loads entire XML into memory using a tree structure?", options: { a: "SAX", b: "DOM", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "Event-based XML parser that does not build a full tree is?", options: { a: "DOM", b: "SAX", c: "XSLT", d: "XPath" }, ans: "b" },
+  { q: "Event-based XML parser?", options: { a: "SAX", b: "DOM" }, ans: "a" },
+
+  // SAX Specific Questions
+  { q: "Which method in SAX is called at the start of the document parsing?", options: { a: "startElement()", b: "characters()", c: "startDocument()", d: "init()" }, ans: "c" },
+  { q: "Which SAX method handles text content within an element?", options: { a: "characters()", b: "textContent()", c: "getText()", d: "elementText()" }, ans: "a" },
+  { q: "Which event does SAX trigger when an element tag closes?", options: { a: "characters()", b: "startElement()", c: "endElement()", d: "closeTag()" }, ans: "c" },
+  { q: "What is a key advantage of SAX compared to DOM?", options: { a: "Easy XML modification", b: "More memory efficient", c: "Better user interface", d: "Random access support" }, ans: "b" },
+  { q: "Which XML parser is best when document modifications are required?", options: { a: "DOM", b: "SAX" }, ans: "a" },
+  { q: "What is a key limitation of SAX parsing?", options: { a: "Slow performance", b: "No document modification capability", c: "High memory usage", d: "Limited file support" }, ans: "b" },
+  { q: "What does the 'startElement()' method in SAX do?", options: { a: "Handles closing tags", b: "Processes text data", c: "Indicates the beginning of an element", d: "Terminates parsing" }, ans: "c" },
+
+  // DOM Specific Questions
+  { q: "What kind of structure does DOM build?", options: { a: "Array", b: "Graph", c: "Tree", d: "Flat list" }, ans: "c" },
+  { q: "In DOM parsing, what is the initial node of the document?", options: { a: "Document node", b: "Element node", c: "Text node", d: "Attribute node" }, ans: "a" },
+  { q: "What is a primary disadvantage of DOM parsing for very large XML files?", options: { a: "Memory intensive", b: "Limited functionality", c: "Lack of tree structure", d: "Slow node access" }, ans: "a" }
+];
+
+const questionsPerPage = 10;
+let currentPage = 0;
+let questionsShuffled = [];
+
+function init() {
+  // Deep copy and shuffle questions
+  questionsShuffled = questions.slice();
+  for (let i=questionsShuffled.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [questionsShuffled[i], questionsShuffled[j]] = [questionsShuffled[j], questionsShuffled[i]];
+  }
+  loadPage();
+}
+
+function loadPage() {
+  document.getElementById("quizContainer").innerHTML = "";
+  const startIdx = currentPage * questionsPerPage;
+  const pageQuestions = questionsShuffled.slice(startIdx, startIdx + questionsPerPage);
+  for (let i=0; i<pageQuestions.length; i++) {
+    const qIdx = startIdx + i;
+    const q = pageQuestions[i];
+    const div = document.createElement("div");
+    div.className = "question active";
+    div.id = "question" + qIdx;
+    const h3 = document.createElement("h3");
+    h3.innerText = q.q; // no question number display
+    div.appendChild(h3);
+    for (const [k,v] of Object.entries(q.options)) {
+      const label = document.createElement("label");
+      const radio = document.createElement("input");
+      radio.type="radio";
+      radio.name=`q${qIdx}`;
+      radio.value=k;
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(" " + v));
+      div.appendChild(label);
+    }
+    document.getElementById("quizContainer").appendChild(div);
+  }
+
+  // Add Bottom Navigation Button
+  const btn = document.createElement("button");
+  btn.id = "navBtn";
+  btn.innerText = (startIdx + questionsPerPage >= questionsShuffled.length) ? "Finish" : "Next";
+  btn.onclick = handleNext;
+  document.getElementById("quizContainer").appendChild(btn);
+}
+
+function handleNext() {
+  const startIdx = currentPage*questionsPerPage;
+  const pageQuestions = questionsShuffled.slice(startIdx, startIdx + questionsPerPage);
+  for (let i=0; i<pageQuestions.length; i++) {
+    const qIdx = startIdx + i;
+    const div = document.getElementById("question" + qIdx);
+    const checked = div.querySelector("input[type=radio]:checked");
+    if (!checked) {
+      alert("Please answer all questions");
+      return;
+    }
+  }
+  // hide current questions
+  for (let i=0; i<pageQuestions.length; i++) {
+    document.getElementById("question" + (startIdx+i)).style.display='none';
+  }
+  
+  // next page or finish
+  if (startIdx+questionsPerPage >= questionsShuffled.length) {
+    showResults();
+  } else {
+    currentPage++;
+    loadPage();
+  }
+}
+
+function showResults() {
+  let score=0;
+  let html="<h2>Your Results</h2><ul>";
+  for (let i=0; i<questions.length; i++) {
+    const ansInput = document.querySelector(`input[name=q${i}]`);
+    const userAns = ansInput ? ansInput.value : null;
+    const correctAns = questions[i].ans;
+    if (userAns===correctAns) score++;
+    if (userAns===correctAns) {
+      html+= `<li>Question: ${questions[i].q} - <span class="correct">Correct</span></li>`;
+    } else {
+      html+= `<li>Question: ${questions[i].q} - <span class="wrong">Wrong</span> (Your answer: ${userAns || 'No answer'}, Correct: ${correctAns})</li>`;
+    }
+  }
+  html+= `<p>Total Score: ${score} / ${questions.length}</p>`;
+  html+= `<button onclick="tryAgain()">Try Again</button>`;
+  document.getElementById("quizContainer").innerHTML = "";
+  document.getElementById("scoreDiv").innerHTML=html;
+  document.getElementById("scoreDiv").style.display="block";
+}
+
+function tryAgain() {
+  currentPage=0;
+  document.getElementById("scoreDiv").style.display="none";
+  init();
+}
+
+window.onload=() => { init(); }
+
+</script>
+</body>
+</html>
